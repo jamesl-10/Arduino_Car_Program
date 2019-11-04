@@ -1,7 +1,7 @@
  // Define pins for sensor
 #include <Servo.h>
 
-Servo servo_2;
+Servo servo_9;
 
 #define trigPin 10
 #define echoPin 13
@@ -16,7 +16,7 @@ const int IN4 = 4;
 
 const int ENA = 3; // pins for motor speed control for both
 
-const int ENB = 9;
+const int ENB = 8;
 
 String direction = "Forward";
 
@@ -31,11 +31,11 @@ void setup()
   
   Serial.begin (9600);
   
-  servo_2.attach(2);
+  servo_9.attach(9);
   //160 is left
   //70 is forward
   //-20 is right
-  servo_2.write(70);
+  servo_9.write(70);
   
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
@@ -53,6 +53,8 @@ void turnLeft()
     digitalWrite(IN2, LOW);
     digitalWrite(IN3, HIGH);
     digitalWrite(IN4, LOW);
+    
+    delay(1000);
 }
 
 // Turns right
@@ -62,6 +64,8 @@ void turnRight()
   digitalWrite(IN2, HIGH);
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, HIGH);
+
+  delay(1000);
 }
 
 void goForward()
@@ -80,19 +84,25 @@ void goBackward()
   digitalWrite(IN4, LOW);
 }
 
+void stopCar()
+{
+  analogWrite(ENA, 0);
+  analogWrite(ENB, 0);
+}
+
 void lookLeft()
 {
-  servo_2.write(160);
+  servo_9.write(160);
 }
 
 void lookRight()
 {
-  servo_2.write(-20);
+  servo_9.write(-20);
 }
 
 void lookForward()
 {
-  servo_2.write(70);
+  servo_9.write(70);
 }
 
 void loop()
@@ -102,8 +112,6 @@ void loop()
   // Code for finding distance in front of sensor
   analogWrite(ENA, 200);
   analogWrite(ENB, 230);
-  Serial.print(direction);
-  delay(1000);
   
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -114,12 +122,8 @@ void loop()
   duration = pulseIn(echoPin, HIGH);
 
   distance = (duration / 2) * 0.0343;
-  digitalWrite(IN1, HIGH);
-  digitalWrite(IN2, LOW);
-  digitalWrite(IN3, LOW);
-  digitalWrite(IN4, HIGH);
 
-  if (distance >= 20)
+  if (distance >= 15)
   {
     if (direction == "Right")
     {
@@ -136,6 +140,8 @@ void loop()
   
   else
   {
+    stopCar();
+    
     if (direction == "Forward")
     {
       lookRight();
