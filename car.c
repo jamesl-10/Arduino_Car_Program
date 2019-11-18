@@ -98,8 +98,10 @@ void goBackward()
 
 void stopCar()
 {
-  analogWrite(ENA, 0);
-  analogWrite(ENB, 0);
+  digitalWrite(IN1, LOW);     
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, HIGH);
 }
 
 void look(int direction)
@@ -148,7 +150,6 @@ void loop()
     look(Right);
     delay(1500);
     int distanceRight = findDistance();
-    Serial.println(findDistance());
 
     if (distanceRight < 15 && distanceLeft < 15)
     {
@@ -158,17 +159,17 @@ void loop()
     else if (distanceRight > distanceLeft)
     {
       turnRight();
+      delay(1000);
     }
     else if (distanceRight < distanceLeft)
     {
       turnLeft();
+      delay(1000);
     }
     else if (distanceRight == distanceLeft)
     {
       turnLeft();
+      delay(1000);
     }
-    
-    look(Forward);
-    delay(1000);
   }
 }
