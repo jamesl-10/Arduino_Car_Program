@@ -59,7 +59,7 @@ void turnLeft()
     digitalWrite(IN3, HIGH);
     digitalWrite(IN4, LOW);
     
-    delay(150);
+    delay(165);
     
     analogWrite(ENA, 0);
     analogWrite(ENB, 0);
@@ -73,7 +73,7 @@ void turnRight()
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, HIGH);
 
-  delay(150);
+  delay(165);
   
   analogWrite(ENA, 0);
   analogWrite(ENB, 0);
@@ -155,12 +155,12 @@ void loop()
 
     delay(1000);
     
-    if (dL > 30)
+    if (dL > 70)
     {
       turnLeft();
     }
     
-    if (dR > 30)
+    if (dR > 70)
     {
       turnRight();
     }
@@ -171,6 +171,9 @@ void loop()
   else //When there is an obstacle in front of car
   {
     stopCar();
+    delay(1000);
+    goBackward();
+    delay(1000);
 
     look(Left);
     delay(1500);
