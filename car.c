@@ -59,7 +59,7 @@ void turnLeft()
     digitalWrite(IN3, HIGH);
     digitalWrite(IN4, LOW);
     
-    delay(1000);
+    delay(150);
     
     analogWrite(ENA, 0);
     analogWrite(ENB, 0);
@@ -73,7 +73,7 @@ void turnRight()
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, HIGH);
 
-  delay(1000);
+  delay(150);
   
   analogWrite(ENA, 0);
   analogWrite(ENB, 0);
@@ -129,13 +129,43 @@ int findDistance()
 void loop()
 {
   // Controls speed of motors
-  analogWrite(ENA, 150);
-  analogWrite(ENB, 150);
+  analogWrite(ENA, 200);
+  analogWrite(ENB, 130);
 
   if (findDistance() >= 15) // When there is no obstable in front of car
   {
+    
     look(Forward);
     goForward();
+
+    delay(300);
+    
+    stopCar();
+    delay(1000);
+    
+    look(Left);
+    int dL = findDistance();
+    Serial.println(dL);
+
+    delay(1000);
+    
+    look(Right);
+    int dR = findDistance();
+    Serial.println(dR);
+
+    delay(1000);
+    
+    if (dL > 30)
+    {
+      turnLeft();
+    }
+    
+    if (dR > 30)
+    {
+      turnRight();
+    }
+    
+    delay(1000);
   }
   
   else //When there is an obstacle in front of car
@@ -155,6 +185,7 @@ void loop()
     {
       // Turn 180
       goBackward();
+      delay(1000);
     }
     else if (distanceRight > distanceLeft)
     {
