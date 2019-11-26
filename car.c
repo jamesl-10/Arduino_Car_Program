@@ -59,10 +59,9 @@ void turnLeft()
     digitalWrite(IN3, HIGH);
     digitalWrite(IN4, LOW);
     
-    delay(165);
+    delay(200);
     
-    analogWrite(ENA, 0);
-    analogWrite(ENB, 0);
+    stopCar();
 }
 
 // Turns right
@@ -73,10 +72,9 @@ void turnRight()
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, HIGH);
 
-  delay(165);
+  delay(200);
   
-  analogWrite(ENA, 0);
-  analogWrite(ENB, 0);
+  stopCar();
 }
 
 // Goes forward
@@ -129,13 +127,15 @@ int findDistance()
 void loop()
 {
   // Controls speed of motors
-  analogWrite(ENA, 200);
+  analogWrite(ENA, 215);
   analogWrite(ENB, 130);
+  look(Forward);
+  delay(1000);
+  int dirForw = findDistance();
+  Serial.println(dirForw);
 
-  if (findDistance() >= 15) // When there is no obstable in front of car
+  if (dirForw >= 15) // When there is no obstable in front of car
   {
-    
-    look(Forward);
     goForward();
 
     delay(300);
@@ -144,23 +144,29 @@ void loop()
     delay(1000);
     
     look(Left);
+    delay(500);
     int dL = findDistance();
     Serial.println(dL);
 
     delay(1000);
     
     look(Right);
+    delay(500);
     int dR = findDistance();
     Serial.println(dR);
 
     delay(1000);
-    
-    if (dL > 70)
+
+    if (dL > 100 && dR < 20 || dR > 100 && dL < 20)
+    {
+      //pass
+    }
+    else if (dL > 100)
     {
       turnLeft();
     }
     
-    if (dR > 70)
+    else if (dR > 100)
     {
       turnRight();
     }
@@ -173,12 +179,14 @@ void loop()
     stopCar();
     delay(1000);
     goBackward();
+    delay(200);
+    stopCar();
+
     delay(1000);
 
     look(Left);
     delay(1500);
     int distanceLeft = findDistance();
-    Serial.println(findDistance());
     
     look(Right);
     delay(1500);
@@ -188,22 +196,23 @@ void loop()
     {
       // Turn 180
       goBackward();
-      delay(1000);
+      delay(200);
+      stopCar();
     }
     else if (distanceRight > distanceLeft)
     {
       turnRight();
-      delay(1000);
+      delay(100);
     }
     else if (distanceRight < distanceLeft)
     {
       turnLeft();
-      delay(1000);
+      delay(100);
     }
     else if (distanceRight == distanceLeft)
     {
       turnLeft();
-      delay(1000);
+      delay(100);
     }
   }
 }
