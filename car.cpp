@@ -29,6 +29,8 @@ int Forward = 70;
 int Left = 160;
 int Right = -20;
 
+String potentialExit;
+
 // Initial function
 void setup()
 {
@@ -72,7 +74,7 @@ void turnRight()
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, HIGH);
 
-  delay(200);
+  delay(220);
   
   stopCar();
 }
@@ -129,59 +131,124 @@ void loop()
   // Controls speed of motors
   analogWrite(ENA, 215);
   analogWrite(ENB, 130);
+
+  delay(100);
   look(Forward);
   delay(1000);
-  int dirForw = findDistance();
-  Serial.println(dirForw);
-
-  if (dirForw >= 15) // When there is no obstable in front of car
+  int distanceInFront = findDistance();
+  Serial.println(distanceInFront);
+    
+  if (distanceInFront >= 13) // When there is no obstacle in front of car
   {
-    goForward();
-
-    delay(300);
+    goForward();      
+    delay(150-(10/distanceInFront));
     
     stopCar();
-    delay(1000);
-    
-    look(Left);
-    delay(500);
-    int dL = findDistance();
-    Serial.println(dL);
+    int dL1, dL2, dR1, dR2 = 0;
+    int dirLeftArr[2];
+    int dirRightArr[2];
 
-    delay(1000);
-    
-    look(Right);
-    delay(500);
-    int dR = findDistance();
-    Serial.println(dR);
+    if (potentialExit == "Left")
+    {
+      for (int i = 0; i < 2; i++)
+      {
+        look(Forward + (i+1)*45);
+        delay(1500);
+        dirLeftArr[i] = findDistance();
+      }
+      
+      if (dirLeftArr[0] < 12)
+      {
+        digitalWrite(IN1, LOW);
+        digitalWrite(IN2, HIGH);
+        digitalWrite(IN3, LOW);
+        digitalWrite(IN4, HIGH);
+        delay(70); 
+        stopCar();
+      }
+      if (dirLeftArr[1] < 11)
+      {
+        digitalWrite(IN1, LOW);
+        digitalWrite(IN2, HIGH);
+        digitalWrite(IN3, LOW);
+        digitalWrite(IN4, HIGH);
+        delay(70); 
+        stopCar();
+      }
+      else if (dirLeftArr[1] > 25 && dirLeftArr[1] < 30)
+      {
+        digitalWrite(IN1, HIGH);
+        digitalWrite(IN2, LOW);
+        digitalWrite(IN3, HIGH);
+        digitalWrite(IN4, LOW);
+        delay(70);
+        stopCar();
+      }
+      else if (dirLeftArr[1] > 100)
+      {
+        goForward();
+        delay(250);
+        stopCar();
+        turnLeft();
+        potentialExit = "None";
+      }  
+    }
+    else if (potentialExit == "Right")
+    {
 
-    delay(1000);
-
-    if (dL > 100 && dR < 20 || dR > 100 && dL < 20)
-    {
-      //pass
+      for (int i = 0; i < 2; i++)
+      {
+        look(Forward - (i+1)*45);
+        delay(1000);
+        dirRightArr[i] = findDistance();
+      }
+      
+      if (dirRightArr[0] < 12)
+      {
+        digitalWrite(IN1, HIGH);
+        digitalWrite(IN2, LOW);
+        digitalWrite(IN3, HIGH);
+        digitalWrite(IN4, LOW);
+        delay(70);
+        stopCar();
+      }
+      if (dirRightArr[1] < 11)
+      {
+        digitalWrite(IN1, HIGH);
+        digitalWrite(IN2, LOW);
+        digitalWrite(IN3, HIGH);
+        digitalWrite(IN4, LOW);
+        delay(70);
+        stopCar();
+      }
+      else if (dirRightArr[1] > 25 && dirRightArr[1] < 30)
+      {
+        digitalWrite(IN1, LOW);
+        digitalWrite(IN2, HIGH);
+        digitalWrite(IN3, LOW);
+        digitalWrite(IN4, HIGH);
+        delay(70);
+        stopCar();
+      }
+      else if (dirRightArr[1] > 100)
+      {
+        goForward();
+        delay(250);
+        stopCar();
+        turnRight();
+        potentialExit = "None";
+      }    
     }
-    else if (dL > 100)
-    {
-      turnLeft();
-    }
-    
-    else if (dR > 100)
-    {
-      turnRight();
-    }
-    
-    delay(1000);
   }
   
   else //When there is an obstacle in front of car
   {
+    Serial.println("ok!");
     stopCar();
-    delay(1000);
+    delay(500);
     goBackward();
-    delay(200);
+    delay(90);
     stopCar();
-
     delay(1000);
 
     look(Left);
@@ -192,27 +259,30 @@ void loop()
     delay(1500);
     int distanceRight = findDistance();
 
-    if (distanceRight < 15 && distanceLeft < 15)
+    if (distanceRight < 10 && distanceLeft < 10)
     {
       // Turn 180
       goBackward();
+      potentialExit = "None";
       delay(200);
-      stopCar();
     }
     else if (distanceRight > distanceLeft)
     {
       turnRight();
-      delay(100);
+      potentialExit = "Left";
+      delay(1000);
     }
     else if (distanceRight < distanceLeft)
     {
       turnLeft();
-      delay(100);
+      potentialExit = "Right";
+      delay(1000);
     }
     else if (distanceRight == distanceLeft)
     {
       turnLeft();
-      delay(100);
+      potentialExit = "Right";
+      delay(1000);
     }
   }
 }
