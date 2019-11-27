@@ -61,7 +61,7 @@ void turnLeft()
     digitalWrite(IN3, HIGH);
     digitalWrite(IN4, LOW);
     
-    delay(200);
+    delay(215);
     
     stopCar();
 }
@@ -163,16 +163,16 @@ void loop()
         digitalWrite(IN2, HIGH);
         digitalWrite(IN3, LOW);
         digitalWrite(IN4, HIGH);
-        delay(70); 
+        delay(50); 
         stopCar();
       }
-      if (dirLeftArr[1] < 11)
+      else if (dirLeftArr[1] < 11)
       {
         digitalWrite(IN1, LOW);
         digitalWrite(IN2, HIGH);
         digitalWrite(IN3, LOW);
         digitalWrite(IN4, HIGH);
-        delay(70); 
+        delay(50); 
         stopCar();
       }
       else if (dirLeftArr[1] > 25 && dirLeftArr[1] < 30)
@@ -181,7 +181,7 @@ void loop()
         digitalWrite(IN2, LOW);
         digitalWrite(IN3, HIGH);
         digitalWrite(IN4, LOW);
-        delay(70);
+        delay(50);
         stopCar();
       }
       else if (dirLeftArr[1] > 100)
@@ -209,16 +209,16 @@ void loop()
         digitalWrite(IN2, LOW);
         digitalWrite(IN3, HIGH);
         digitalWrite(IN4, LOW);
-        delay(70);
+        delay(50);
         stopCar();
       }
-      if (dirRightArr[1] < 11)
+      else if (dirRightArr[1] < 11)
       {
         digitalWrite(IN1, HIGH);
         digitalWrite(IN2, LOW);
         digitalWrite(IN3, HIGH);
         digitalWrite(IN4, LOW);
-        delay(70);
+        delay(50);
         stopCar();
       }
       else if (dirRightArr[1] > 25 && dirRightArr[1] < 30)
@@ -227,7 +227,7 @@ void loop()
         digitalWrite(IN2, HIGH);
         digitalWrite(IN3, LOW);
         digitalWrite(IN4, HIGH);
-        delay(70);
+        delay(50);
         stopCar();
       }
       else if (dirRightArr[1] > 100)
@@ -264,7 +264,7 @@ void loop()
       // Turn 180
       goBackward();
       potentialExit = "None";
-      delay(200);
+      delay(400);
     }
     else if (distanceRight > distanceLeft)
     {
